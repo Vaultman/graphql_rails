@@ -14,6 +14,10 @@ module GraphqlRails
         @name || default_name
       end
 
+      def type_name
+        "#{name}Type"
+      end
+
       def description(new_description = nil)
         @description = new_description if new_description
         @description

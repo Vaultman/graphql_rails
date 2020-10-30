@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'graphql_rails/attributes'
-require 'graphql_rails/model/build_graphql_type'
+require 'graphql_rails/model/find_or_build_graphql_type'
 require 'graphql_rails/model/build_enum_type'
 require 'graphql_rails/model/input'
 require 'graphql_rails/model/configurable'
@@ -57,9 +57,7 @@ module GraphqlRails
       end
 
       def graphql_type
-        @graphql_type ||= BuildGraphqlType.call(
-          name: name, description: description, attributes: attributes
-        )
+        @graphql_type ||= FindOrBuildGraphqlType.call(name: name, description: description, attributes: attributes,)
       end
 
       def connection_type
