@@ -9,13 +9,13 @@ module GraphqlRails
         @attributes ||= {}
       end
 
-      def name(type_name = nil)
-        @name = type_name if type_name
+      def name(graphql_name = nil)
+        @name = graphql_name if graphql_name
         @name || default_name
       end
 
       def type_name
-        "#{name}Type"
+        "#{name.camelize}Type#{SecureRandom.hex}"
       end
 
       def description(new_description = nil)

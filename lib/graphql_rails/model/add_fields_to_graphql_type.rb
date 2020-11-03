@@ -2,14 +2,12 @@
 
 module GraphqlRails
   module Model
-    # stores information about model specific config, like attributes and types
-    class BuildGraphqlType
+    # Adds graphql attributes as graphql fields to given graphql schema object.
+    class AddFieldsToGraphqlType
       require 'graphql_rails/concerns/service'
       require 'graphql_rails/model/call_graphql_model_method'
 
       include ::GraphqlRails::Service
-
-      PAGINATION_KEYS = %i[before after first last].freeze
 
       def initialize(klass:, attributes:)
         @klass = klass
@@ -18,7 +16,6 @@ module GraphqlRails
 
       def call
         attributes.each { |attribute| define_graphql_field(attribute) }
-        klass
       end
 
       private
@@ -26,13 +23,13 @@ module GraphqlRails
       attr_reader :attributes, :klass
 
       def define_graphql_field(attribute) # rubocop:disable Metrics/MethodLength
-        klass.send :field, *attribute.field_args, **attribute.field_options do
+        klass.send(:field, *attribute.field_args, **attribute.field_options) do
           attribute.attributes.values.each do |arg_attribute|
             argument(*arg_attribute.input_argument_args, **arg_attribute.input_argument_options)
           end
         end
 
-        klass.send :define_method, attribute.property do |**kwargs|
+        klass.send(:define_method, attribute.property) do |**kwargs|
           CallGraphqlModelMethod.call(
             model: object,
             attribute_config: attribute,

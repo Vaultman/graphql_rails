@@ -34,7 +34,6 @@ module GraphqlRails
           attribute_options.each do |method_name, args|
             send_args = [method_name]
             send_args << args if attribute.method(method_name).parameters.present?
-
             attribute.public_send(*send_args)
           end
 
@@ -57,7 +56,12 @@ module GraphqlRails
       end
 
       def graphql_type
-        @graphql_type ||= FindOrBuildGraphqlType.call(name: name, description: description, attributes: attributes,)
+        @graphql_type ||= FindOrBuildGraphqlType.call(
+          name: name,
+          description: description,
+          attributes: attributes,
+          type_name: type_name
+        )
       end
 
       def connection_type
